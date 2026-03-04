@@ -20,23 +20,24 @@ Aplicación Android desarrollada en Kotlin con Jetpack Compose que permite visua
 
 com.example.mapacustos
 │
-├── ui
-│ ├── pantalla
-│ │ ├── LoginScreen
-│ │ ├── RegisterScreen
-│ │ ├── UserSettingsScreen
-│ │ ├── SoundColorSettingsScreen
-│ │ └── PanelPerformanceScreen (Mapa principal)
-│ │
-│ └── datos
-│ ├── AppDatabase
-│ ├── UserEntity
-│ ├── StreetEntity
-│ ├── DAO interfaces
-│ ├── Routes
-│ └── DatabaseInitializer
+├── MainActivity.kt                → Punto de entrada de la app
 │
-└── MainActivity
+├── ui
+│   ├── pantalla                   → Pantallas Compose
+│   │   ├── LoginScreen.kt
+│   │   ├── RegisterScreen.kt
+│   │   ├── UserSettingsScreen.kt
+│   │   ├── SoundColorSettingsScreen.kt
+│   │   └── PanelPerformanceScreen.kt
+│   │
+│   └── datos                      → Capa de datos
+│       ├── AppDatabase.kt
+│       ├── UserEntity.kt
+│       ├── StreetEntity.kt
+│       ├── UserDao.kt
+│       ├── StreetDao.kt
+│       ├── Routes.kt
+│       └── DatabaseInitializer.kt
 
 
 ---
