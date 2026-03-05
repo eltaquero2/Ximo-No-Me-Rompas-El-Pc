@@ -1,22 +1,27 @@
-## 🗺️ MapaCustos
+# 🗺️ MapaCustos
 
-Aplicación Android desarrollada en Kotlin con Jetpack Compose que permite visualizar calles con niveles de peligrosidad personalizados, configurar colores, sonido y gestionar usuarios mediante base de datos local.
+![Kotlin](https://img.shields.io/badge/Kotlin-100000?style=for-the-badge&logo=kotlin&logoColor=white) ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-100000?style=for-the-badge&logo=jetpack&logoColor=white) ![OSMDroid](https://img.shields.io/badge/OSMDroid-100000?style=for-the-badge) ![Room](https://img.shields.io/badge/Room-100000?style=for-the-badge)
+
+Aplicación Android desarrollada en **Kotlin** con **Jetpack Compose**, que permite visualizar calles con niveles de peligrosidad personalizados, configurar colores, sonido, gestionar usuarios y rutas evitando calles peligrosas mediante mapas OpenStreetMap.
+
+El mapa se centra **por defecto en Alzira** (`39.1747, -0.4232`), y si se concede permiso de ubicación, se centra automáticamente en la ubicación del usuario.
 
 ---
 
-## 🚀 Tecnologías utilizadas
+## 🚀 Tecnologías
 
-- Kotlin
-- Jetpack Compose (Material 3)
-- Room Database
-- DataStore / SharedPreferences
-- OSMDroid (mapa OpenStreetMap)
-- Navigation Compose
-- Coroutines
+- **Lenguaje:** Kotlin  
+- **UI:** Jetpack Compose (Material 3)  
+- **Base de datos:** Room  
+- **Persistencia rápida:** SharedPreferences  
+- **Mapas:** OSMDroid (OpenStreetMap)  
+- **Navegación:** Navigation Compose  
+- **Asincronía:** Coroutines  
 
 ---
 
 ## 📂 Estructura del proyecto
+
 
 ```
 com.example.mapacustos
@@ -41,210 +46,151 @@ com.example.mapacustos
 │ └── DatabaseInitializer.kt
 ```
 
----
-
-## 🗄️ Base de Datos
-
-Room contiene:
-
-### 👤 UserEntity
-- name
-- email (clave única)
-- password
-- gender
-- birthDate
-
-### 🛣️ StreetEntity
-- name
-- latitude
-- longitude
-- dangerLevel (0-3)
 
 ---
 
-## 🗺️ Sistema de Mapa
+## 🗄️ Base de datos
 
-- Basado en OSMDroid.
-- Carga inicial de calles desde un archivo JSON.
-- Las áreas peligrosas se dibujan como `Polygon`.
-- Los colores se almacenan en preferencias.
-- Al modificar nivel → se limpian overlays y se redibujan.
+### UserEntity
+- name  
+- email (clave única)  
+- password  
+- gender  
+- birthDate  
 
----
-
-## 🎨 Sistema de Colores
-
-Se almacenan mediante:
-ColorPreferences
-SharedPreferences (cache rápido)
-
-
-Cada nivel tiene un color personalizable mediante RGB.
+### StreetEntity
+- name  
+- latitude / longitude (GPS)  
+- dangerLevel (0-3)  
+- includesViolation  
+- includesViolence  
 
 ---
 
-## 🔊 Sistema de Sonido
+## 🗺️ Sistema de mapa
 
-Configuración de:
-- Nivel 1
-- Nivel 2
-- Vibración
-
-Actualmente gestionado como estado local (expandible a DataStore).
+- Basado en **OSMDroid**.  
+- **Ubicación por defecto:** Centro de Alzira (`39.1747, -0.4232`).  
+- Se centra automáticamente en la ubicación actual si se conceden permisos de GPS.  
+- Carga calles desde JSON inicial.  
+- Áreas peligrosas dibujadas con `Polygon` semi-transparente según nivel de peligrosidad.  
+- Colores personalizables por nivel.  
+- Al actualizar nivel → se limpian y redibujan overlays automáticamente.  
 
 ---
 
-## 🔐 Sistema de Sesión
+## 🎨 Sistema de colores
 
-- Se guarda en SharedPreferences:
-"session" -> current_user (email)
+- Guardados en **SharedPreferences** (`color_cache`)  
+- Cada nivel (1–3) tiene color editable RGB.  
+- Cambios afectan **inmediatamente** al renderizado del mapa.  
 
+---
 
+## 🔊 Sistema de sonido
+
+- Configuración para:
+  - Nivel 1  
+  - Nivel 2  
+  - Vibración  
+- Estado local en Compose (expandible a DataStore).  
+
+---
+
+## 🔐 Sistema de sesión
+
+- Guardado en SharedPreferences: `"session" -> current_user (email)`  
 - Al cerrar sesión:
-    - Se elimina `current_user`
-    - Se redirige a Register
+  - Se elimina `current_user`  
+  - Redirección a pantalla de registro  
 
 ---
 
-## 📦 Archivo JSON inicial
+## 📦 JSON inicial
 
-Se carga mediante:
-DatabaseInitializer.loadJsonIfEmpty()
-
-
-Solo se ejecuta si la tabla Street está vacía.
+- Cargado por `DatabaseInitializer.loadJsonIfEmpty()`  
+- Solo si tabla `Street` está vacía.  
 
 ---
 
-## ▶️ Cómo ejecutar el proyecto
+## 📍 Rutas y navegación
 
-1. Clonar repositorio
-2. Abrir en Android Studio
-3. Sync Gradle
+- Cálculo de rutas **evitando calles con nivel peligroso** no permitido.  
+- Si no hay ruta segura → se muestra ruta directa.  
+- Se muestran rutas con `Polyline` azul en el mapa.  
+- Se calculan desvíos automáticos para evitar calles peligrosas.  
+
+---
+
+## ▶️ Ejecución
+
+1. Clonar repositorio  
+2. Abrir en Android Studio  
+3. Sync Gradle  
 4. Ejecutar en dispositivo con:
-   - Permisos de ubicación
-   - Android 8+
+   - Permisos de ubicación  
+   - Android 8+  
 
 ---
 
-## ⚙️ Mejoras futuras recomendadas
+## ⚙️ Mejoras futuras
 
-- Migrar sesión a DataStore
-- Añadir cifrado de contraseña
-- Añadir ViewModel
-- Añadir arquitectura MVVM completa
-- Persistir configuración de sonido
-- Sistema real de autenticación
+- Migrar sesión a DataStore  
+- Cifrado de contraseñas  
+- Añadir ViewModel  
+- Implementar arquitectura MVVM completa  
+- Persistir configuración de sonido  
+- Sistema de autenticación real  
 
 ---
 
 ## 👨‍💻 Convenciones importantes
 
-- No animar `Surface` directamente si tiene sombra
-- Limpiar overlays antes de redibujar mapa
-- No mezclar `android.graphics.Color` con `compose.ui.graphics.Color` sin alias
+- Limpiar overlays antes de redibujar mapa  
+- No animar `Surface` directamente si tiene sombra  
+- No mezclar `android.graphics.Color` con `compose.ui.graphics.Color` sin alias  
+- Centro de mapa por defecto: **Alzira (`39.1747, -0.4232`)**, fallback automático si GPS no disponible  
 
 ---
 
-# 📖 Manual de Usuario – MapaCustos
+## 📖 Manual de usuario
 
-## 1️⃣ Registro
+### Registro
+- Introducir nombre, email, contraseña, fecha de nacimiento y género.  
+- Pulsar “Create Account”.  
 
-Al abrir la app:
+### Inicio de sesión
+- Email y contraseña → abre mapa.  
 
-- Introducir:
-  - Nombre completo
-  - Email
-  - Contraseña
-  - Fecha de nacimiento (selector de calendario)
-  - Género
-- Pulsar "Create Account"
+### Pantalla principal
+- **Botón inferior izquierdo:** Activa/desactiva modo ruta.  
+- **Botón superior derecho:** Panel de ajustes:
+  - Usuario  
+  - Sonido / color  
+  - Mapa  
 
-Si el email ya existe, se mostrará error.
+### Ajustes de usuario
+- Ver email  
+- Cambiar contraseña, fecha, género  
+- Guardar cambios  
+- Cerrar sesión  
 
----
+### Ajustes de sonido / color
+- Activar/desactivar sonido por nivel  
+- Activar vibración  
+- Colores por nivel (editable RGB, vista previa y restablecer)  
 
-## 2️⃣ Inicio de sesión
+### Ajustes de mapa
+- Modificar nivel de peligrosidad  
+- Actualiza representación visual del mapa  
 
-- Introducir email y contraseña
-- Si son correctos → se abre el mapa
-
----
-
-## 3️⃣ Pantalla principal (Mapa)
-
-Contiene:
-
-### 🔘 Botón inferior izquierdo
-Activa/desactiva modo ruta.
-
-### ⚙️ Botón superior derecho
-Panel de ajustes desplegable:
-- Ajustes de usuario
-- Ajustes sonido/color
-- Ajustes de mapa
-
----
-
-## 4️⃣ Ajustes de usuario
-
-Permite:
-- Ver email (no editable)
-- Cambiar contraseña
-- Cambiar fecha (selector calendario)
-- Cambiar género
-- Guardar cambios
-- Cerrar sesión (texto rojo)
-
----
-
-## 5️⃣ Ajustes de sonido y color
-
-Permite:
-- Activar/desactivar sonido para:
-  - Nivel 1
-  - Nivel 2
-- Activar vibración
-- Personalizar colores de:
-  - Nivel 1
-  - Nivel 2
-  - Nivel 3
-
-Colores editables mediante:
-- Sliders RGB
-- Vista previa en rectángulo superior
-- Botón restablecer
-
----
-
-## 6️⃣ Ajustes de mapa
-
-Permite:
-- Cambiar nivel de peligrosidad de calles
-- Actualizar representación visual en el mapa
-
----
-
-## 7️⃣ Sistema de colores
-
-Los colores personalizados afectan directamente:
-- Renderizado de áreas
-- Representación visual en mapa
-
----
-
-## 8️⃣ Cerrar sesión
-
-Desde Ajustes de Usuario:
-- Pulsar "Cerrar sesión"
-- Se redirige a pantalla de registro
+### Cerrar sesión
+- Desde Ajustes de Usuario → “Cerrar sesión”  
 
 ---
 
 ## 🛠️ Solución de problemas
 
-- Si no se ven calles → verificar permisos ubicación
-- Si los colores no cambian → guardar cambios
-- Si el mapa no actualiza → reiniciar app
-
----
+- Calles no visibles → verificar permisos GPS  
+- Colores no cambian → guardar cambios  
+- Mapa no actualiza → reiniciar app  
